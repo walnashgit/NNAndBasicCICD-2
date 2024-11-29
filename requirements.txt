@@ -4,3 +4,4 @@ torchvision==0.15.0+cpu
 pytest>=7.0.0
 tqdm>=4.65.0
 numpy>=1.24.0 
+torchsummary>=1.5.1

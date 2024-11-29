@@ -8,9 +8,20 @@ import torch.nn.functional as F
 import os
 from tqdm import tqdm
 from torchsummary import summary
+import glob
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters())
+
+def delete_old_models():
+    """Delete all existing model files"""
+    model_files = glob.glob('models/mnist_model_*.pth')
+    for f in model_files:
+        try:
+            os.remove(f)
+            print(f"Deleted old model: {f}")
+        except OSError as e:
+            print(f"Error deleting {f}: {e}")
 
 def test(model, device, test_loader):
     model.eval()
@@ -76,8 +87,12 @@ def train():
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=128, shuffle=False)
     
     # Training
-    num_epochs = 4
+    num_epochs = 20
     best_accuracy = 0.0
+    best_model_path = None
+    
+    # Create models directory if it doesn't exist
+    os.makedirs('models', exist_ok=True)
     
     for epoch in range(num_epochs):
         # Training phase
@@ -117,15 +132,25 @@ def train():
         
         # Save best model based on test accuracy
         if test_accuracy > best_accuracy:
+            # Delete previous best model if it exists
+            if best_model_path and os.path.exists(best_model_path):
+                os.remove(best_model_path)
+                print(f'Deleted previous best model: {best_model_path}')
+            
             best_accuracy = test_accuracy
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             accuracy_str = f"{test_accuracy:.1f}"
-            save_path = f'models/mnist_model_{timestamp}_acc{accuracy_str}.pth'
-            os.makedirs('models', exist_ok=True)
-            torch.save(model.state_dict(), save_path)
-            print(f'New best model saved to {save_path}')
+            best_model_path = f'models/mnist_model_{timestamp}_acc{accuracy_str}.pth'
+            
+            # Delete any other existing models
+            delete_old_models()
+            
+            # Save new best model
+            torch.save(model.state_dict(), best_model_path)
+            print(f'New best model saved to {best_model_path}')
 
     print(f'\nTraining completed. Best test accuracy: {best_accuracy:.2f}%')
+    print(f'Best model saved at: {best_model_path}')
 
 if __name__ == '__main__':
     train() 

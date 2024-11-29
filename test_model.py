@@ -97,7 +97,7 @@ def test_model_accuracy():
             correct += (predicted == target).sum().item()
     
     accuracy = 100 * correct / total
-    assert accuracy > 95, f"Model accuracy is {accuracy}%, should be > 95%"
+    assert accuracy > 99.3, f"Model accuracy is {accuracy}%, should be > 95%"
 
 if __name__ == "__main__":
     pytest.main([__file__]) 
