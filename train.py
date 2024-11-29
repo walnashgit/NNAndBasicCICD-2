@@ -72,7 +72,8 @@ def train():
     print(f"\nTotal trainable parameters: {total_params:,}")
     
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    # optimizer = optim.Adam(model.parameters(), lr=0.01)
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     
     # Data loading
     transform = transforms.Compose([
