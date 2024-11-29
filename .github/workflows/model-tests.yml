@@ -1,0 +1,52 @@
+name: Model Architecture Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      CUDA_VISIBLE_DEVICES: ''  # Disable CUDA
+      FORCE_CUDA: '0'          # Force CPU usage
+      NO_CUDA: '1'            # Disable CUDA
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Force pip to install CPU-only versions
+        export TORCH_CUDA_ARCH_LIST="None"
+        pip install -r requirements.txt
+    
+    - name: Run architecture tests
+      run: |
+        python -m pytest test_model.py::test_parameter_count -v
+        python -m pytest test_model.py::test_batch_normalization -v
+        python -m pytest test_model.py::test_dropout -v
+        python -m pytest test_model.py::test_gap_or_fc -v
+    
+    - name: Train model
+      run: |
+        python train.py
+    
+    - name: Run accuracy test
+      run: |
+        python -m pytest test_model.py::test_model_accuracy -v
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-results
+        path: |
+          .pytest_cache
+          test-results.xml
+        retention-days: 30 
