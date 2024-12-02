@@ -9,12 +9,12 @@ This project implements a Convolutional Neural Network (CNN) for MNIST digit cla
 - 5 Convolutional layers with batch normalization and dropout
 - Global Average Pooling
 - Final Dense layer with 10 outputs (one for each digit)
-- Total parameters: < 25,000
+- Total parameters: = 19,050
 
 ## Features
 - Automated training and testing pipeline
 - Model validation checks:
-  - Parameter count verification (< 25,000 parameters)
+  - Parameter count verification (< 20,000 parameters)
   - Input shape validation (28x28)
   - Output shape validation (10 classes)
   - Accuracy threshold (> 95% on test set)
@@ -81,6 +81,14 @@ The pipeline is triggered on every push to the repository.
 - Loss Function: Negative Log Likelihood
 - Training: Single epoch with progress bar showing loss and accuracy
 - Model Saving: Automatic with timestamp and accuracy in filename
+
+## Training Logs
+- Training Accuracy: 99.59%
+![alt text](image.png)
+
+- Test Accuracy: 99.37%%
+![alt text](image-1.png)
+
 
 ## Testing
 The test suite (`test_model.py`) verifies:
