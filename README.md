@@ -17,7 +17,7 @@ This project implements a Convolutional Neural Network (CNN) for MNIST digit cla
   - Parameter count verification (< 20,000 parameters)
   - Input shape validation (28x28)
   - Output shape validation (10 classes)
-  - Accuracy threshold (> 95% on test set)
+  - Accuracy threshold (> 99.3% on test set)
 - Automatic model versioning with timestamp and accuracy
 - CPU-only training support for both local and CI environments
 
@@ -77,7 +77,7 @@ The pipeline is triggered on every push to the repository.
 ## Model Training Details
 - Dataset: MNIST (60,000 training images, 10,000 test images)
 - Batch Size: 128
-- Optimizer: Adam (lr=0.01)
+- Optimizer: SGD (lr=0.01)
 - Loss Function: Negative Log Likelihood
 - Training: Single epoch with progress bar showing loss and accuracy
 - Model Saving: Automatic with timestamp and accuracy in filename
@@ -93,8 +93,8 @@ The pipeline is triggered on every push to the repository.
 ## Testing
 The test suite (`test_model.py`) verifies:
 - Model architecture compatibility with 28x28 input images
-- Total parameter count (< 25,000)
-- Model accuracy on test set (> 95%)
+- Total parameter count (< 20,000)
+- Model accuracy on test set (> 99.3%)
 - Output shape (10 classes)
 
 ## Model Artifacts
